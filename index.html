@@ -14,19 +14,21 @@
         display: block;
       }
     </style>
+    <!-- Optional: an empty favicon to avoid 404 errors -->
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
   </head>
   <body>
     <!-- Use a module script so we can import ES modules -->
     <script type="module">
-      // Import Three.js and OrbitControls from a CDN using absolute URLs
+      // Import Three.js and OrbitControls using absolute URLs
       import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.module.js';
       import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.149.0/examples/jsm/controls/OrbitControls.js';
 
-      // Create a scene and set its background
+      // Create the scene
       const scene = new THREE.Scene();
       scene.background = new THREE.Color(0x202020);
 
-      // Set up the camera with a perspective view
+      // Set up the camera
       const camera = new THREE.PerspectiveCamera(
         75,
         window.innerWidth / window.innerHeight,
@@ -35,12 +37,12 @@
       );
       camera.position.set(100, 100, 300);
 
-      // Create a renderer and append its canvas to the document
+      // Set up the renderer
       const renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
       document.body.appendChild(renderer.domElement);
 
-      // Add orbit controls so you can rotate and zoom the scene
+      // Add OrbitControls for user interaction
       const controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
       controls.dampingFactor = 0.05;
@@ -59,11 +61,11 @@
         { rank: 10, pricePerSqm: 109136, block: 'A' }
       ];
 
-      // Create a group to hold all the apartment "dots"
+      // Create a group for the apartments
       const apartmentGroup = new THREE.Group();
       scene.add(apartmentGroup);
 
-      // Define colors for each block
+      // Define colors for blocks
       const blockColors = {
         'A': 0xff0000, // Red
         'B': 0x0000ff, // Blue
@@ -71,12 +73,8 @@
         'D': 0xffff00  // Yellow
       };
 
-      // For each apartment, create a sphere and position it in 3D space
+      // Create spheres for each apartment
       apartments.forEach(apartment => {
-        // Map apartment data to coordinates:
-        // - X: based on rank (spread horizontally)
-        // - Y: based on price per sqm (scaled and shifted)
-        // - Z: based on block (each block gets its own layer)
         const x = apartment.rank * 30;
         const y = -(apartment.pricePerSqm - 90000) / 50;
         let z;
@@ -97,21 +95,21 @@
         apartmentGroup.add(sphere);
       });
 
-      // Add lights to the scene so the spheres are visible
+      // Add lights
       const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
       scene.add(ambientLight);
       const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
       directionalLight.position.set(0, 1, 1);
       scene.add(directionalLight);
 
-      // Adjust the renderer and camera on window resize
+      // Handle window resize
       window.addEventListener('resize', () => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
       });
 
-      // Animation loop: update controls and render the scene
+      // Animation loop
       function animate() {
         requestAnimationFrame(animate);
         controls.update();
@@ -121,3 +119,4 @@
     </script>
   </body>
 </html>
+
