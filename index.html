@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <title>3D Apartment Visualization</title>
     <style>
-      /* Basic styling: remove margins and make the canvas fill the window */
       body {
         margin: 0;
         overflow: hidden;
@@ -14,21 +13,25 @@
         display: block;
       }
     </style>
-    <!-- Optional: an empty favicon to avoid 404 errors -->
-    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <!-- Import map to resolve "three" -->
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.module.js"
+      }
+    }
+    </script>
   </head>
   <body>
-    <!-- Use a module script so we can import ES modules -->
     <script type="module">
-      // Import Three.js and OrbitControls using absolute URLs
-      import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.module.js';
+      // Use the import map so that "three" is resolved correctly.
+      import * as THREE from 'three';
       import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.149.0/examples/jsm/controls/OrbitControls.js';
 
-      // Create the scene
+      // Set up the scene, camera, and renderer (same as before)
       const scene = new THREE.Scene();
       scene.background = new THREE.Color(0x202020);
 
-      // Set up the camera
       const camera = new THREE.PerspectiveCamera(
         75,
         window.innerWidth / window.innerHeight,
@@ -37,43 +40,37 @@
       );
       camera.position.set(100, 100, 300);
 
-      // Set up the renderer
       const renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
       document.body.appendChild(renderer.domElement);
 
-      // Add OrbitControls for user interaction
       const controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
       controls.dampingFactor = 0.05;
 
-      // Sample apartment data
       const apartments = [
-        { rank: 1,  pricePerSqm: 90788, block: 'D' },
-        { rank: 2,  pricePerSqm: 95584, block: 'D' },
-        { rank: 3,  pricePerSqm: 96545, block: 'C' },
-        { rank: 4,  pricePerSqm: 100171, block: 'C' },
-        { rank: 5,  pricePerSqm: 101833, block: 'C' },
-        { rank: 6,  pricePerSqm: 102200, block: 'B' },
-        { rank: 7,  pricePerSqm: 106238, block: 'D' },
-        { rank: 8,  pricePerSqm: 106327, block: 'B' },
-        { rank: 9,  pricePerSqm: 107423, block: 'B' },
+        { rank: 1, pricePerSqm: 90788, block: 'D' },
+        { rank: 2, pricePerSqm: 95584, block: 'D' },
+        { rank: 3, pricePerSqm: 96545, block: 'C' },
+        { rank: 4, pricePerSqm: 100171, block: 'C' },
+        { rank: 5, pricePerSqm: 101833, block: 'C' },
+        { rank: 6, pricePerSqm: 102200, block: 'B' },
+        { rank: 7, pricePerSqm: 106238, block: 'D' },
+        { rank: 8, pricePerSqm: 106327, block: 'B' },
+        { rank: 9, pricePerSqm: 107423, block: 'B' },
         { rank: 10, pricePerSqm: 109136, block: 'A' }
       ];
 
-      // Create a group for the apartments
       const apartmentGroup = new THREE.Group();
       scene.add(apartmentGroup);
 
-      // Define colors for blocks
       const blockColors = {
-        'A': 0xff0000, // Red
-        'B': 0x0000ff, // Blue
-        'C': 0x00ff00, // Green
-        'D': 0xffff00  // Yellow
+        'A': 0xff0000,
+        'B': 0x0000ff,
+        'C': 0x00ff00,
+        'D': 0xffff00
       };
 
-      // Create spheres for each apartment
       apartments.forEach(apartment => {
         const x = apartment.rank * 30;
         const y = -(apartment.pricePerSqm - 90000) / 50;
@@ -85,7 +82,6 @@
           case 'D': z = 300; break;
           default:  z = 0;
         }
-
         const geometry = new THREE.SphereGeometry(5, 16, 16);
         const material = new THREE.MeshPhongMaterial({
           color: blockColors[apartment.block] || 0xffffff
@@ -95,21 +91,18 @@
         apartmentGroup.add(sphere);
       });
 
-      // Add lights
       const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
       scene.add(ambientLight);
       const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
       directionalLight.position.set(0, 1, 1);
       scene.add(directionalLight);
 
-      // Handle window resize
       window.addEventListener('resize', () => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
       });
 
-      // Animation loop
       function animate() {
         requestAnimationFrame(animate);
         controls.update();
@@ -119,4 +112,3 @@
     </script>
   </body>
 </html>
-
