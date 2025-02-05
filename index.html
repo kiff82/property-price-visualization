@@ -3,6 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <title>3D Apartment Visualization</title>
+    <!-- Content Security Policy: relax eval restrictions -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline';"
+    />
     <style>
       body {
         margin: 0;
@@ -76,11 +81,20 @@
         const y = -(apartment.pricePerSqm - 90000) / 50;
         let z;
         switch (apartment.block) {
-          case 'A': z = 0; break;
-          case 'B': z = 100; break;
-          case 'C': z = 200; break;
-          case 'D': z = 300; break;
-          default:  z = 0;
+          case 'A':
+            z = 0;
+            break;
+          case 'B':
+            z = 100;
+            break;
+          case 'C':
+            z = 200;
+            break;
+          case 'D':
+            z = 300;
+            break;
+          default:
+            z = 0;
         }
 
         // Create the sphere geometry and material.
@@ -117,4 +131,3 @@
     </script>
   </body>
 </html>
-
