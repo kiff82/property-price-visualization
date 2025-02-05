@@ -3,8 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <title>3D Apartment Visualization</title>
+    <!-- Set CSP via meta tag -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline';">
     <style>
-      /* Ensure html and body fill the viewport */
       html, body {
         margin: 0;
         padding: 0;
@@ -12,13 +13,8 @@
         background-color: #202020;
         overflow: hidden;
       }
-      /* Container div now does not use display: none so it contributes to layout.
-         If you need to hide it while preserving space, you could use visibility: hidden or opacity: 0. */
       #container {
         height: 100%;
-        /* Remove display: none; if it existed previously */
-        /* Optionally, if you want it hidden but still take up space, use:
-           visibility: hidden; */
       }
       canvas {
         display: block;
@@ -26,10 +22,7 @@
     </style>
   </head>
   <body>
-    <!-- Container div (make sure it’s not hidden with display: none) -->
     <div id="container">
-      <!-- Any content you want to include goes here -->
-      <!-- For example, a message: -->
       <p style="color: white; text-align: center;">3D Apartment Visualization</p>
     </div>
     <script type="module">
@@ -88,7 +81,6 @@
 
       // Create a sphere for each apartment.
       apartments.forEach(apartment => {
-        // Calculate position based on apartment data.
         const x = apartment.rank * 30;
         const y = -(apartment.pricePerSqm - 90000) / 50;
         let z;
@@ -109,7 +101,6 @@
             z = 0;
         }
 
-        // Create the sphere geometry and material.
         const geometry = new THREE.SphereGeometry(5, 16, 16);
         const material = new THREE.MeshPhongMaterial({
           color: blockColors[apartment.block] || 0xffffff
@@ -143,4 +134,5 @@
     </script>
   </body>
 </html>
+
 
