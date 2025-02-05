@@ -4,10 +4,21 @@
     <meta charset="UTF-8" />
     <title>3D Apartment Visualization</title>
     <style>
-      body {
+      /* Ensure html and body fill the viewport */
+      html, body {
         margin: 0;
-        overflow: hidden;
+        padding: 0;
+        height: 100%;
         background-color: #202020;
+        overflow: hidden;
+      }
+      /* Container div now does not use display: none so it contributes to layout.
+         If you need to hide it while preserving space, you could use visibility: hidden or opacity: 0. */
+      #container {
+        height: 100%;
+        /* Remove display: none; if it existed previously */
+        /* Optionally, if you want it hidden but still take up space, use:
+           visibility: hidden; */
       }
       canvas {
         display: block;
@@ -15,6 +26,12 @@
     </style>
   </head>
   <body>
+    <!-- Container div (make sure it’s not hidden with display: none) -->
+    <div id="container">
+      <!-- Any content you want to include goes here -->
+      <!-- For example, a message: -->
+      <p style="color: white; text-align: center;">3D Apartment Visualization</p>
+    </div>
     <script type="module">
       // Import Three.js and OrbitControls directly from the CDN.
       import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.module.js';
