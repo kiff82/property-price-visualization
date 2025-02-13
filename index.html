@@ -1,50 +1,81 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Form Example</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <!-- Content Security Policy without 'unsafe-eval' -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self';">
-    <style>
-      /* Basic CSS for styling the form */
-      body {
-        font-family: sans-serif;
-        margin: 20px;
-        background-color: #f5f5f5;
-      }
-      .form-group {
-        margin-bottom: 1em;
-      }
-      label {
-        display: block;
-        margin-bottom: 0.5em;
-        font-weight: bold;
-      }
-      input {
-        width: 100%;
-        padding: 0.5em;
-        box-sizing: border-box;
-      }
-      button {
-        padding: 0.75em 1.5em;
-        background-color: #007acc;
-        color: #fff;
-        border: none;
-        cursor: pointer;
-      }
-      button:hover {
-        background-color: #005fa3;
-      }
-    </style>
-  </head>
-  <body>
-    <form action="/submit" method="POST">
-      <div class="form-group">
-        <button type="submit">Submit</button>
-      </div>
-    </form>
-  </body>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <title>Våre Turminner</title>
+  <style>
+    body { margin: 0; overflow: hidden; background-color: #000; }
+    /* Container for 3D-globen */
+    #globe-container {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+    /* Galleri med bilder fra turer */
+    #image-gallery {
+      position: absolute;
+      top: 20px; left: 20px;
+      z-index: 2;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    #image-gallery img {
+      width: 150px;
+      border: 2px solid #fff;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Globusen plasseres her -->
+  <div id="globe-container"></div>
+  <!-- Bildegalleri med turbilder -->
+  <div id="image-gallery">
+    <img src="tur1.jpg" alt="Tur 1">
+    <img src="tur2.jpg" alt="Tur 2">
+    <!-- Legg til flere bilder etter behov -->
+  </div>
+
+  <!-- Last inn Three.js fra CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script>
+    // Opprett scene, kamera og renderer
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.getElementById('globe-container').appendChild(renderer.domElement);
+
+    // Lag en globus med en sfærisk geometri og et jordtekstur
+    const geometry = new THREE.SphereGeometry(5, 32, 32);
+    const textureLoader = new THREE.TextureLoader();
+    const earthTexture = textureLoader.load('https://threejs.org/examples/textures/earth_atmos_2048.jpg');
+    const material = new THREE.MeshBasicMaterial({ map: earthTexture });
+    const globe = new THREE.Mesh(geometry, material);
+    scene.add(globe);
+
+    // Plasser kameraet slik at globusen er synlig
+    camera.position.z = 10;
+
+    // Animere globusen slik at den roterer sakte
+    function animate() {
+      requestAnimationFrame(animate);
+      globe.rotation.y += 0.001; // Roteringshastighet; juster etter ønske
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // Håndterer vindusendringer
+    window.addEventListener('resize', () => {
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+    });
+  </script>
+</body>
 </html>
 
 
