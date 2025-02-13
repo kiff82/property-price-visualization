@@ -2,137 +2,60 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>3D Apartment Visualization</title>
-    <!-- Set CSP via meta tag -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline';">
+    <title>Form Example</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Content Security Policy without 'unsafe-eval' -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self';">
     <style>
-      html, body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        background-color: #202020;
-        overflow: hidden;
+      /* Basic CSS for styling the form */
+      body {
+        font-family: sans-serif;
+        margin: 20px;
+        background-color: #f5f5f5;
       }
-      #container {
-        height: 100%;
+      .form-group {
+        margin-bottom: 1em;
       }
-      canvas {
+      label {
         display: block;
+        margin-bottom: 0.5em;
+        font-weight: bold;
+      }
+      input {
+        width: 100%;
+        padding: 0.5em;
+        box-sizing: border-box;
+      }
+      button {
+        padding: 0.75em 1.5em;
+        background-color: #007acc;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #005fa3;
       }
     </style>
   </head>
   <body>
-    <div id="container">
-      <p style="color: white; text-align: center;">3D Apartment Visualization</p>
-    </div>
-    <script type="module">
-      // Import Three.js and OrbitControls directly from the CDN.
-      import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.module.js';
-      import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.149.0/examples/jsm/controls/OrbitControls.js';
-
-      // Set up the scene.
-      const scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x202020);
-
-      // Set up the camera.
-      const camera = new THREE.PerspectiveCamera(
-        75,
-        window.innerWidth / window.innerHeight,
-        0.1,
-        1000
-      );
-      camera.position.set(100, 100, 300);
-
-      // Set up the renderer.
-      const renderer = new THREE.WebGLRenderer({ antialias: true });
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      document.body.appendChild(renderer.domElement);
-
-      // Set up OrbitControls.
-      const controls = new OrbitControls(camera, renderer.domElement);
-      controls.enableDamping = true;
-      controls.dampingFactor = 0.05;
-
-      // Apartment data.
-      const apartments = [
-        { rank: 1, pricePerSqm: 90788, block: 'D' },
-        { rank: 2, pricePerSqm: 95584, block: 'D' },
-        { rank: 3, pricePerSqm: 96545, block: 'C' },
-        { rank: 4, pricePerSqm: 100171, block: 'C' },
-        { rank: 5, pricePerSqm: 101833, block: 'C' },
-        { rank: 6, pricePerSqm: 102200, block: 'B' },
-        { rank: 7, pricePerSqm: 106238, block: 'D' },
-        { rank: 8, pricePerSqm: 106327, block: 'B' },
-        { rank: 9, pricePerSqm: 107423, block: 'B' },
-        { rank: 10, pricePerSqm: 109136, block: 'A' }
-      ];
-
-      // Create a group to hold all apartment spheres.
-      const apartmentGroup = new THREE.Group();
-      scene.add(apartmentGroup);
-
-      // Define colors for the blocks.
-      const blockColors = {
-        'A': 0xff0000,
-        'B': 0x0000ff,
-        'C': 0x00ff00,
-        'D': 0xffff00
-      };
-
-      // Create a sphere for each apartment.
-      apartments.forEach(apartment => {
-        const x = apartment.rank * 30;
-        const y = -(apartment.pricePerSqm - 90000) / 50;
-        let z;
-        switch (apartment.block) {
-          case 'A':
-            z = 0;
-            break;
-          case 'B':
-            z = 100;
-            break;
-          case 'C':
-            z = 200;
-            break;
-          case 'D':
-            z = 300;
-            break;
-          default:
-            z = 0;
-        }
-
-        const geometry = new THREE.SphereGeometry(5, 16, 16);
-        const material = new THREE.MeshPhongMaterial({
-          color: blockColors[apartment.block] || 0xffffff
-        });
-        const sphere = new THREE.Mesh(geometry, material);
-        sphere.position.set(x, y, z);
-        apartmentGroup.add(sphere);
-      });
-
-      // Add lighting.
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-      scene.add(ambientLight);
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-      directionalLight.position.set(0, 1, 1);
-      scene.add(directionalLight);
-
-      // Handle window resize.
-      window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-      });
-
-      // Animation loop.
-      function animate() {
-        requestAnimationFrame(animate);
-        controls.update();
-        renderer.render(scene, camera);
-      }
-      animate();
-    </script>
+    <form action="/submit" method="POST">
+      <div class="form-group">
+        <!-- The label's for attribute matches the input's id -->
+        <label for="username">Username:</label>
+        <!-- The input has both id and name attributes -->
+        <input type="text" id="username" name="username" placeholder="Enter your username" autocomplete="username">
+      </div>
+      <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password" autocomplete="current-password">
+      </div>
+      <div class="form-group">
+        <button type="submit">Submit</button>
+      </div>
+    </form>
   </body>
 </html>
+
 
 
